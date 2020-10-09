@@ -40,6 +40,35 @@ addEventListener(
 )
 ```
 
+或者（对于heroku） 
 
+```
+// 单日
+const SingleDay = '111.herokuapp.com'
+// 双日
+const DoubleDay = '222.herokuapp.com'
 
+// 由于heroku不绑卡不能自定义域名，就算绑卡后https也不方便
+// 另外免费套餐每月550小时，有些人不够用
+// 于是在CF Workers使用此代码，分单双日反代不同heroku帐号下的相同配置的app
+// 只改上面，下面不用动
+
+addEventListener(
+    "fetch",event => {
+
+    let nd = new Date();
+    if (nd.getDate()%2) {
+        host = SingleDay
+    } else {
+        host = DoubleDay
+    }
+        let url=new URL(event.request.url);
+        url.hostname=host;
+        let request=new Request(url,event.request);
+        event. respondWith(
+            fetch(request)
+        )
+    }
+)
+```
 这次kintohub上ss和v2ray起死回生要特别感谢 Alice（ https://twitter.com/alicesu55 ）的condom项目（ https://github.com/alicesu55/condom ）。
